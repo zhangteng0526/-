@@ -1,161 +1,112 @@
-#include <stdio.h>
-#include <conio.h>
-#include <time.h>
-
-#define NN      9
-#define N       3
-
-typedef struct square {
-    int     i[NN];
-    int     totalCount, resultCount, partResultCount;
-    int     t_start;
-} SQUARE;
+#include<stdio.h>
+#include<time.h>
 
 
-int     exam( SQUARE *ps );
-void    print(SQUARE s );
-int     Used( int i[], int n);
-
-int main(int argc, char *argv[])
+int main()
 {
-    SQUARE  s;
-
-    s.t_start = clock();
-    s.resultCount = s.totalCount = s.partResultCount = 0;
-
-    int     *i;
-
-    i = s.i;
-    for (i[0] = 1; i[0] <= 9; i[0]++)
+    int a[3][3]; 
+    int i,j;
+    int cflag;
+    int *m;
+    int sum1,sum2,csum[3],rsum[3];
+    int resultcount;
+    clock_t start,finish;
+    int N=3;
+    m=&a[0][0];
+    start = clock();
+    for( m[0]= 1;m[0]<=9; m[0]++)
     {
-        for (i[1] = 1; i[1] <= 9; i[1]++)
-        {
-            if ( Used(i, 1) )
-                continue;
-            for (i[2] = 1; i[2] <= 9; i[2]++)
-            {
-                if ( Used(i,2) )
+       for(m[1] = 1;m[1]<=9;m[1]++)
+       {
+           if (m[1]==m[0]) 
+               continue;
+           for(m[2]=1;m[2]<=9;m[2]++)
+           {
+
+                if (m[2]==m[1]||m[2]==m[0])
                     continue;
-                for (i[3] = 1; i[3] <= 9; i[3]++)
+                for(m[3]=1;m[3]<=9;m[3]++)
                 {
-                    if ( Used(i,3) )
+                    if(m[3]==m[2]||m[3]==m[1]||m[3]==m[0])
                         continue;
-                    for (i[4] = 1; i[4] <= 9; i[4]++)
+                    for(m[4]=1;m[4]<=9;m[4]++)
                     {
-                        if ( Used(i,4) )
+                        if(m[4]==m[3]||m[4]==m[2]||m[4]==m[1]||m[4]==m[0])
                             continue;
-                        for (i[5] = 1; i[5] <= 9; i[5]++)
+                        for(m[5]=1;m[5]<=9;m[5]++)
                         {
-                            if ( Used(i,5) )
-                                continue;
-                            for (i[6] = 1; i[6] <= 9; i[6]++)
-                            {
-                                if ( Used(i,6) )
+                            if (m[5]==m[0]||m[5]==m[1]||m[5]==m[2]||m[5]==m[3]||m[5]==m[4])
                                     continue;
-                                for (i[7] = 1; i[7] <= 9; i[7]++)
+                            for(m[6]=1;m[6]<=9;m[6]++)
+                            {
+                                if(m[6]==m[0]||m[6]==m[1]||m[6]==m[2]||m[6]==m[3]||m[6]==m[4]||m[6]==m[5])
+                                    continue;
+                                for(m[7]=1;m[7]<=9;m[7]++)
                                 {
-                                    if ( Used(i,7) )
+                                    if(m[7]==m[0]||m[7]==m[1]||m[7]==m[2]||m[7]==m[3]||m[7]==m[4]||m[7]==m[5]||m[7]==m[6])
                                         continue;
-                                    for (i[8] = 1; i[8] <= 9; i[8]++)
+                                    for(m[8]=1;m[8]<=9;m[8]++)
                                     {
-                                        if ( Used(i,8) )
+                                        if(m[8]==m[7]||m[8]==m[6]||m[8]==m[5]||m[8]==m[4]||m[8]==m[3]||m[8]==m[2]||m[8]==m[1]||m[8]==m[0])
                                             continue;
-
-                                        s.totalCount++;
-
-                                       
-                                        if ( exam( &s ) )
+                                          
+                                        sum1=0,sum2=0,cflag=0;
+                                        
+                                        for(i=0;i<=2;i++)
                                         {
-                                            s.resultCount++;
-                                            print( s );
+                                            csum[i]=0;
+                                            rsum[i]=0;
                                         }
+
+                                        for(j=0;j<=2;j++)
+                                        {
+											sum1 += a[j][j];
+											sum2 += a[2-j][j];
+										}
+                                        
+                                        for (j=0;j<=2;j++) 
+                                        {
+											for (i=0;i<=2;i++)
+                                            {
+												csum[i] += a[j][i];
+												rsum[j] += a[j][i];
+											}
+										}
+                                        	
+										if (sum1!=((1+N*N)*N/2)||sum2!=((1+N*N)*N/2))
+											continue;
+										for (j=0;j<=2;j++) 
+                                        {
+											if (csum[j]!=((1+N*N)*N/2)||rsum[j]!=((1+N*N)*N/2)) 
+                                            {
+												cflag=1;
+												break;
+											}
+										}
+                                        
+                                        
+                                        if(cflag==0)
+                                        {   
+                                            resultcount++;
+                                            printf(" [ ");
+                                            for(i=0;i<=8;i++)
+                                            {
+                                                printf("%d ",m[i]);
+                                            }
+                                            printf("]\n");
+										}
                                     }
-                                }
+                                }     
                             }
                         }
                     }
                 }
-            }
+            }        
         }
     }
-
-return 0;
+    finish=clock();
+    printf("所用时间time=%f ms\n",(double)finish-start/CLK_TCK);
+    printf("符合条件的一共有%d个",resultcount);	
 }
-
-int     Used( int i[], int n)
-{
-    int     j, used = 0;
-
-    for(j=0;j<n;j++) {
-        if (i[j]==i[n]) {
-            used = 1;
-            break;
-        }
-    }
-    return used;
-}
-
-void    print( SQUARE s )
-{
-    int     j;
-
-    printf("(%d)\t   ", s.resultCount);
-    for (j = 0; j < NN; j++)
-    {    
-        printf("%d ", s.i[j]);
-        if((j+1)%3==0)
-        printf("\n\t   ");
-    }
-    printf("[%d] [%d] \ttime:[%ld]\r\n", s.totalCount, s.partResultCount, clock() - s.t_start);
-
-}
-
-
-
-int     exam( SQUARE *ps )
-{
-    int     j, k, cflag, n;
-    int     sum1, sum2, rsum[3], csum[3], stdsum;
-
-    stdsum = 15;
 
     
-    for (j = 0; j < 3; j++)
-    {
-        csum[j] = 0;
-        rsum[j] = 0;
-    }
-    sum1 = 0;
-    sum2 = 0;
-
-  
-    for (j = 0; j < 3; j++)
-    {
-        for (k = 0; k < 3; k++)
-        {
-            csum[k] += ps->i[j*N+k];   
-            rsum[j] += ps->i[j*N+k];    
-        }
-        sum1 += ps->i[j*N+j];           
-        sum2 += ps->i[j*N+2-j];   
-    }
-
-    
-   
-    if (sum1 != stdsum || stdsum != sum2)
-        return 0;
-
-    (ps->partResultCount)++;
-  
-    cflag = 1;
-    for (j = 0; j < 3; j++)
-    {
-        if (csum[j] != stdsum || rsum[j] != stdsum)
-        {
-            cflag = 0;
-            break;
-        }
-    }    
-    return cflag;
-
-}
