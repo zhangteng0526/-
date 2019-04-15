@@ -1,14 +1,14 @@
 #include <stdio.h>
 #include <conio.h>
 #include <time.h>
-
-#define NN 9
-#define N 3
+#define     MAXNN   100
+#define     MAXN    10
+int N;
 
 typedef struct square
 {
-    int i[NN+1];
-    int remain[NN+1];
+    int i[MAXNN];
+    int remain[MAXNN];
     int totalCount, resultCount, partResultCount;
     int t_start;
 } SQUARE;
@@ -20,6 +20,8 @@ void    msquare( SQUARE *ps, int no);
 
 int main(int argc, char *argv[])
 {
+    printf("请输入一个3~5的数");
+    scanf("%d",&N);
     SQUARE s;
 
     s.t_start = clock();
@@ -27,7 +29,7 @@ int main(int argc, char *argv[])
 
     int     i;
 
-    for(i=1;i<=NN;i++) {
+    for(i=1;i<=N*N;i++) {
         s.i[i] = 0;
         s.remain[i] = 1;
     }
@@ -43,12 +45,12 @@ void    msquare( SQUARE *ps, int no)
     int     i;
 
 
-    for(i=1;i<=NN;i++) {
+    for(i=1;i<=N*N;i++) {
         if ( ps->remain[i]==0 )
             continue;
         ps->i[no] = i;
         ps->remain[i] = 0;
-        if (no==NN-1) {
+        if (no==N*N-1) {
             ps->totalCount ++;
             if (exam(ps)) {
                 ps->resultCount ++;
@@ -69,21 +71,19 @@ void print(SQUARE s)
     int j;
 
     printf("%d\t[ ", s.resultCount);
-    for (j = 0; j < NN; j++)
+    for (j = 0; j < N*N; j++)
         printf("%d ", s.i[j]);
     printf("]\t\t[%d] [%d] \ttime:[%ld]\r\n", s.totalCount, s.partResultCount, clock() - s.t_start);
 }
 
-// 检查数组i各元素是否满足九宫格要求，如果满足返回非0。
 int exam(SQUARE *ps)
 {
     int j, k, cflag, n;
     int sum1, sum2, rsum[3], csum[3], stdsum;
 
-    stdsum = 15;
+    stdsum = (N+N*N*N)/2;
 
-    // 初始化各求和变量，准备求和检查
-    for (j = 0; j < 3; j++)
+    for (j = 0; j < N; j++)
     {
         csum[j] = 0;
         rsum[j] = 0;
@@ -91,26 +91,24 @@ int exam(SQUARE *ps)
     sum1 = 0;
     sum2 = 0;
 
-    // 按行/列、对角线求和
-    for (j = 0; j < 3; j++)
+
+    for (j = 0; j < N; j++)
     {
-        for (k = 0; k < 3; k++)
+        for (k = 0; k < N; k++)
         {
             csum[k] += ps->i[j * N + k]; //M[j][k];
             rsum[j] += ps->i[j * N + k]; //M[j][k];
         }
         sum1 += ps->i[j * N + j];     //M[j][j];
-        sum2 += ps->i[j * N + 2 - j]; //M[j][2 - j];
+        sum2 += ps->i[j * N + N - 1 - j]; //M[j][2 - j];
     }
 
-   
     if (sum1 != stdsum || stdsum != sum2)
         return 0;
 
     (ps->partResultCount)++;
-    // 检查是否满足各行各列相等
     cflag = 1;
-    for (j = 0; j < 3; j++)
+    for (j = 0; j < N; j++)
     {
         if (csum[j] != stdsum || rsum[j] != stdsum)
         {
