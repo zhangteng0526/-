@@ -79,7 +79,7 @@ int main(int argc, char *argv[])
         t[i] = std::thread(beginWorker, &(s[i]));
     }
 
-    printf("数量，满足对角线的，满足所有条件的，时间\r\n");
+    printf("总数         符合对角线条件的个数  符合所有条件的个数 所用时间\r\n");
 
     int finished = false;
     while (!finished)
@@ -337,7 +337,6 @@ void calcThreshold(SQUARE *ps)
     }
 }
 
-
 int exam(SQUARE *ps)
 {
     int j;
@@ -345,7 +344,6 @@ int exam(SQUARE *ps)
 
     sum1 = 0;
     sum2 = 0;
-
     for (j = 0; j < N; j++)
     {
         sum1 += ps->i[j * N + j];         //M[j][j];
